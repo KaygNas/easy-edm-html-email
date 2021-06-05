@@ -68,7 +68,7 @@ export class Template {
     rawTemplate = this.insertCellInAllDirections(rawTemplate, itemMap)
     const temp = this.resolveTemplate(rawTemplate)
 
-    temp.print("resovedTemplate")
+    // temp.print("resovedTemplate")
     return temp.output()
   }
 
@@ -91,7 +91,7 @@ export class Template {
         const [yMaxRP, xMaxRP] = area2DRP.edge()
         return this.insertCellInDirection(area2DRP, itemMap, xMaxRP + 1, "col", "padding")
       })
-    area2DAppendedCell.print("area2DAppendedCell")
+    // area2DAppendedCell.print("area2DAppendedCell")
     return area2DAppendedCell.output()
   }
 
@@ -172,9 +172,9 @@ export class Template {
       if (mrOfLeft.some((_) => isSpacingArea(_))) insertRowOrCol(newArea2D, mrOfLeft)
       if (mlOfRight.some((_) => isSpacingArea(_))) insertRowOrCol(newArea2D, mlOfRight)
     })
-    area2D.print(`-- ${type}-${direction}:area2D --`)
-    spacingRecord.print(`-- ${type}-${direction}: spacingRecord --`)
-    newArea2D.print(`-- ${type}-${direction}:newArea2D --`)
+    // area2D.print(`-- ${type}-${direction}:area2D --`)
+    // spacingRecord.print(`-- ${type}-${direction}: spacingRecord --`)
+    // newArea2D.print(`-- ${type}-${direction}:newArea2D --`)
 
     return newArea2D
   }

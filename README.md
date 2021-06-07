@@ -43,9 +43,9 @@
       - `type: boolean`
       - 开启 debug 模式，显示网格的 border 可以帮助你快速找到出问题的单元格。
 
-        以下的代码会得到一个如下的布局  
-        | -----A----- |  
-        | ----B--- | C |
+    以下的代码会得到一个如下的布局  
+    | -----A----- |  
+    | ----B--- | C |
 
     ```
       const template = [
@@ -75,7 +75,7 @@
       }
     ```
 
-5.  为元素设置 `margin`、`padding`、`style`
+5.  为元素设置 `margin`、`padding`、`style`  
     如果你对每个元素的布局还有更细致的要求，可以为他们设定 `margin` 或 `padding`：
 
     - `margin`

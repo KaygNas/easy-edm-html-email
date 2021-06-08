@@ -8,7 +8,7 @@ export class Array2D<T> {
 
   insert(item: T, row: number, col?: number) {
     if (!isArray(this.arr[row])) this.arr[row] = []
-    col = col ?? this.edge()[1]
+    col ??= this.edge()[1]
     this.arr[row] = [...this.arr[row].slice(0, col + 1), item, ...this.arr[row].slice(col + 1)]
   }
 
@@ -19,7 +19,7 @@ export class Array2D<T> {
   }
 
   insertRow(rowItems: T[], row?: number) {
-    row = row ?? this.edge()[0]
+    row ??= this.edge()[0]
     this.arr = [...this.arr.slice(0, row + 1), rowItems, ...this.arr.slice(row + 1)]
   }
 
@@ -35,7 +35,7 @@ export class Array2D<T> {
   }
 
   appendRow(rowItems: T[], row?: number) {
-    row = row ?? this.edge()[0]
+    row ??= this.edge()[0]
     this.arr = [...this.arr.slice(0, row), rowItems, ...this.arr.slice(row)]
   }
 

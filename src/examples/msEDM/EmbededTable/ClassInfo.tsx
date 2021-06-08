@@ -6,7 +6,14 @@ import imgs from "../common/imgs"
 import { textCommonStyle } from "../common/comonStyles"
 
 export default function ClassInfo() {
-  return <Table align="right" template={["title", "content1", "content2"]} items={classInfoItems} />
+  return (
+    <Table
+      debug
+      align="right"
+      template={["title", "content1", "content2"]}
+      items={classInfoItems}
+    />
+  )
 }
 
 const content1Items: TableItem[] = [

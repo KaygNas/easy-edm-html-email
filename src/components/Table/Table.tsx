@@ -24,7 +24,7 @@ export function Table({ template, items, debug = false, ...restProps }: TablePro
   // 逐渐行填充元素
   const tableItems: TableItem[][] = temp.map((row) =>
     row.map((_) => {
-      let tableItem = itemMap.get(_.area) || { area: "", element: "" }
+      let tableItem = itemMap.get(_.area) ?? { area: "", element: "" }
       if (isSpacingArea(_.area)) {
         const { type, area, pos } = getTypePosAreaFromSpacing(_.area)
         const { margin, padding, style } = itemMap.get(area) as TableItem
@@ -42,7 +42,7 @@ export function Table({ template, items, debug = false, ...restProps }: TablePro
         const useWidth = ["left", "right"].some((_) => _ === pos)
         let spacingStyle = useWidth ? { width: getSize(pos) } : { height: getSize(pos) }
         const item: TableItem = { element: "", ..._, ...spacingStyle }
-        if (type === "padding") item.style = style || {}
+        if (type === "padding") item.style = style ?? {}
         return item
       } else {
         return { ...tableItem, ..._ }
@@ -56,9 +56,9 @@ export function Table({ template, items, debug = false, ...restProps }: TablePro
   return (
     <table cellPadding="0" cellSpacing="0" border={debug ? "1" : "0"} align="center" {...restProps}>
       <tbody>
-        {tableItems.map((items) => (
+        {tableItems.map((rowItems) => (
           <tr>
-            {items.map(
+            {rowItems.map(
               ({
                 area,
                 element,
@@ -73,7 +73,7 @@ export function Table({ template, items, debug = false, ...restProps }: TablePro
                     textAlign: hAlign,
                     verticalAlign: vAlign,
                     fontSize: ["img", "Button"].includes(
-                      (element as any)?.type?.name || (element as any)?.type
+                      (element as any)?.type?.name ?? (element as any)?.type
                     )
                       ? 0
                       : "inherit",

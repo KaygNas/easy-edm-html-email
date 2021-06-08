@@ -10,7 +10,7 @@ import { relatedClasses } from "./items/relatedClasses"
 export default function PlainTable() {
   return (
     <Table
-      // debug={true}
+      debug={true}
       style={{ width: 640, backgroundColor: "#F5F5F5" }}
       template={[
         "banner banner",

@@ -9,6 +9,7 @@ import { Button } from "../../../components/Button"
 export default function Footer() {
   return (
     <Table
+      debug
       style={{
         width: "100%",
         backgroundColor: "#150534",

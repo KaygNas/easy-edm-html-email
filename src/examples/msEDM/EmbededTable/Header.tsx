@@ -8,7 +8,7 @@ import { Button } from "../../../components/Button"
 import { btnUrl } from "./RelatedClasses"
 
 export default function Header() {
-  return <Table template={["banner", "p1", "p2", "btn1"]} items={tableItems} />
+  return <Table debug template={["banner", "p1", "p2", "btn1"]} items={tableItems} />
 }
 
 const pStyle: CSSProperties = {

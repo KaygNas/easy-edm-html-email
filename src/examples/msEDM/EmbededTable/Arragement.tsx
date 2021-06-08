@@ -6,7 +6,7 @@ import imgs from "../common/imgs"
 import { textCommonStyle } from "../common/comonStyles"
 
 export default function Arrangement() {
-  return <Table align="left" template={["title", "content"]} items={arrangementItems} />
+  return <Table debug align="left" template={["title", "content"]} items={arrangementItems} />
 }
 
 const arrangementItems: TableItem[] = [

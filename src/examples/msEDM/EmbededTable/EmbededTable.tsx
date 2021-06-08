@@ -10,7 +10,7 @@ import RelatedClasses from "./RelatedClasses"
 export default function EmbededTable() {
   return (
     <Table
-      // debug={true}
+      debug
       style={{ width: 640, backgroundColor: "#F5F5F5" }}
       template={[
         "header header",

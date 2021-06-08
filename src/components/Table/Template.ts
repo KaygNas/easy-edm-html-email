@@ -74,7 +74,7 @@ export class Template {
 
   private insertCellInAllDirections(rawTemplate: RawTemplate, itemMap: ItemMap): RawTemplate {
     const area2DOr = new Array2D(rawTemplate)
-    const area2DAppendedCell = area2DOr
+    const area2DAppendedCells = area2DOr
       .fmap((area2DOr) => {
         const [yMaxOr, xMaxOr] = area2DOr.edge()
         return this.insertCellInDirection(area2DOr, itemMap, yMaxOr + 1, "row", "margin")
@@ -91,8 +91,8 @@ export class Template {
         const [yMaxRP, xMaxRP] = area2DRP.edge()
         return this.insertCellInDirection(area2DRP, itemMap, xMaxRP + 1, "col", "padding")
       })
-    // area2DAppendedCell.print("area2DAppendedCell")
-    return area2DAppendedCell.output()
+    // area2DAppendedCells.print("area2DAppendedCell")
+    return area2DAppendedCells.output()
   }
 
   private insertCellInDirection(
@@ -102,39 +102,34 @@ export class Template {
     direction: Direction,
     type: SpacingType
   ): Array2D<string> {
+    const directionInRow = direction === "row"
+    const typeIsMargin = type === "margin"
     const reg = regInDirectionAndType(direction, type)
-    const directionInRow = () => direction === "row"
-    const typeIsMargin = () => type === "margin"
-    const isSpacingArea = (text: string) => reg.test(text)
-    const isSameSpacingArea = (area1: string, area2: string) => {
-      return getArea(area1) === getArea(area2)
-    }
     const getArea = (text: string) => {
       const res = reg.exec(text)
       return res ? res[2] : text
     }
+    const isSpacingArea = (text: string) => reg.test(text)
+    const isSameSpacingArea = (area1: string, area2: string) => {
+      return getArea(area1) === getArea(area2)
+    }
+
     const spacingInput = { mt: 0, mr: 1, mb: 2, ml: 3 }
-    const ahead = directionInRow() ? spacingInput.mt : spacingInput.ml
-    const behind = directionInRow() ? spacingInput.mb : spacingInput.mr
-    const SPACING_AREA = directionInRow()
-      ? typeIsMargin()
-        ? MARGIN_ROW_AREA
-        : PADDING_ROW_AREA
-      : typeIsMargin()
-      ? MARGIN_COL_AREA
-      : PADDING_COL_AREA
+    const ahead = directionInRow ? spacingInput.mt : spacingInput.ml
+    const behind = directionInRow ? spacingInput.mb : spacingInput.mr
+    const SPACING_AREA = getSpacingAreaName(direction, type)
 
     const spacingRecord = new Array2D<string[]>()
-    const spacingRecordRowsOrCols = directionInRow()
+    const spacingRecordRowsOrCols = directionInRow
       ? () => spacingRecord.rows()
       : () => spacingRecord.cols()
 
-    const getRowOrCol = directionInRow()
+    const getRowOrCol = directionInRow
       ? (i: number) => area2D.getRow(i)
       : (i: number) => area2D.getCol(i)
 
     const insertRowOrCol = function <T>(array2D: Array2D<T>, items: T[]) {
-      return direction == "row" ? array2D.insertRow(items) : array2D.insertCol(items)
+      return directionInRow ? array2D.insertRow(items) : array2D.insertCol(items)
     }
 
     // 生成插入单元格位置的记录表
@@ -144,12 +139,12 @@ export class Template {
       const mrLeftOfGap = getRowOrCol(left).map((area) => {
         const m = (itemMap.get(area)?.[type] || [0, 0, 0, 0])[behind]
         // 确定空隙的类型以及位置
-        return m > 0 ? `${SPACING_AREA}_${area}_${directionInRow() ? POS_B : POS_R}` : area
+        return m > 0 ? `${SPACING_AREA}_${area}_${directionInRow ? POS_B : POS_R}` : area
       })
       const mlRightOfGap = getRowOrCol(right).map((area) => {
         const m = (itemMap.get(area)?.[type] || [0, 0, 0, 0])[ahead]
         // 确定空隙的类型以及位置
-        return m > 0 ? `${SPACING_AREA}_${area}_${directionInRow() ? POS_T : POS_L}` : area
+        return m > 0 ? `${SPACING_AREA}_${area}_${directionInRow ? POS_T : POS_L}` : area
       })
 
       const spacingArea = mrLeftOfGap.map((mr, i) => {
@@ -187,7 +182,7 @@ export class Template {
     let x = 0
     let y = 0
     while (y < yMax) {
-      // 解析 area 横跨的列数和行数（找到id最右下角的位置即可确定）
+      // 解析 area 横跨的列数和行数（找到相同且连续area的最右下角的位置即可确定）
       const { area, lastX, lastY } = this.locateLastCoord({
         rawTemplate,
         origin: { x, y },
@@ -220,6 +215,7 @@ export class Template {
       .fmap((arr) => {
         const arrNoDupRow = new Array2D<string>()
         return arr.rows().reduce((pre, cur) => {
+          // 检查最后一列，若与当前列完全相同则判为重复的
           const isDup = cur.every((area, col) => area === pre.get(pre.edge()[0] - 1, col))
           if (!isDup) pre.insertRow(cur)
           return pre
@@ -228,6 +224,7 @@ export class Template {
       .fmap((arr) => {
         const arrNoDupCol = new Array2D<string>()
         return arr.cols().reduce((pre, cur) => {
+          // 检查最后一行，若与当前行完全相同则判为重复的
           const isDup = cur.every((area, row) => area === pre.get(row, pre.edge()[1] - 1))
           if (!isDup) pre.insertCol(cur)
           return pre

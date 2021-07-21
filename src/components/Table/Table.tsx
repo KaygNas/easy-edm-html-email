@@ -1,16 +1,21 @@
 import React, { CSSProperties, TableHTMLAttributes } from "react"
 import { isSpacingArea, Template, getTypePosAreaFromSpacing, Position } from "./Template"
-import { TableItem } from "./types"
+import { AreaNameOfTemplate, TableItem, TableTemplate } from "./types"
 
-export type TableProps = {
-  template: string[]
-  items: TableItem[]
+export type TableProps<T extends TableTemplate> = {
+  template: T
+  items: TableItem<AreaNameOfTemplate<T>>[]
   align?: "left" | "center" | "right"
   style?: CSSProperties
   debug?: boolean
 } & TableHTMLAttributes<HTMLTableElement>
 
-export function Table({ template, items, debug = false, ...restProps }: TableProps) {
+export function Table<T extends TableTemplate>({
+  template,
+  items,
+  debug = false,
+  ...restProps
+}: TableProps<T>) {
   // 将 items 构建哈希表
   const itemMap = new Map<TableItem["area"], TableItem>()
   items.forEach((_) => itemMap.set(_.area, _))
@@ -42,14 +47,13 @@ export function Table({ template, items, debug = false, ...restProps }: TablePro
         const useWidth = ["left", "right"].some((_) => _ === pos)
         let spacingStyle = useWidth ? { width: getSize(pos) } : { height: getSize(pos) }
         const item: TableItem = { element: "", ..._, ...spacingStyle }
-        if (type === "padding") item.style = style ?? {}
+        if (type === "padding") item.style = style ? { backgroundColor: style.backgroundColor } : {}
         return item
       } else {
         return { ...tableItem, ..._ }
       }
     })
   )
-  console.log("tableItems:", tableItems)
   // 为每个元素添加其 rowSpan 和 colSpan 属性以及其他输入的属性
   // 每个元素四周都各有一个单元格，拥有相同的 rowSpan 和 colSpan，用于控制 margin
 
